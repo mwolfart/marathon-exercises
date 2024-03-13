@@ -27,13 +27,7 @@ func get_survivor(n int) int {
 	for len(arr) > 1 {
 		counter = (counter + prime) % len(arr)
 
-		if counter == len(arr)-1 {
-			arr = arr[:counter]
-		} else if counter == 0 {
-			arr = arr[1:]
-		} else {
-			arr = append(arr[:counter], arr[counter+1:]...)
-		}
+		arr = append(arr[:counter], arr[counter+1:]...)
 
 		if counter == 0 {
 			counter = len(arr) - 1
