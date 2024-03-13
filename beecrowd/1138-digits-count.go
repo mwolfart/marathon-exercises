@@ -23,29 +23,46 @@ func num_of_digits(value int) int {
 	return count
 }
 
-func get_digits_count_from_one(value int) [10]int {
-	var counts [10]int
+func count_zeros_up_to(value int) int {
 	limit := pow(10, num_of_digits(value))
-
-	for digit, _ := range counts {
-		amount := 0
-		for p := 10; p <= limit; p = p * 10 {
-			if digit == 0 && p >= 100 {
-				amount += (div_floor(value, p) - 1) * (p / 10)
-			} else {
-				amount += div_floor(value, p) * (p / 10)
-			}
+	amount := 0
+	for p := 10; p <= limit; p = p * 10 {
+		amount += div_floor(value, p) * (p / 10)
+		if p >= 100 {
+			amount -= p / 10
 			remainder := value % p
-			if digit == 0 && p == 10 {
-				continue
-			} else if remainder >= (digit+1)*(p/10) {
+			if remainder >= p/10 {
 				amount += p / 10
-			} else if remainder >= digit*p/10 {
-				amount += remainder - (digit * p / 10) + 1
+			} else {
+				amount += remainder + 1
 			}
 		}
-		counts[digit] = amount
 	}
+	return amount
+}
+
+func count_num_of_digits_up_to(value int, digit int) int {
+	limit := pow(10, num_of_digits(value))
+	amount := 0
+	for p := 10; p <= limit; p = p * 10 {
+		amount += div_floor(value, p) * (p / 10)
+		remainder := value % p
+		if remainder >= (digit+1)*(p/10) {
+			amount += p / 10
+		} else if remainder >= digit*p/10 {
+			amount += remainder - (digit * p / 10) + 1
+		}
+	}
+	return amount
+}
+
+func get_digits_count_from_one(value int) [10]int {
+	var counts [10]int
+
+	for digit, _ := range counts[1:] {
+		counts[digit+1] = count_num_of_digits_up_to(value, digit+1)
+	}
+	counts[0] = count_zeros_up_to(value)
 
 	return counts
 }
