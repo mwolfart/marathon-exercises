@@ -30,9 +30,13 @@ func get_digits_count_from_one(value int) [10]int {
 	for digit, _ := range counts {
 		amount := 0
 		for p := 10; p <= limit; p = p * 10 {
-			amount += div_floor(value, p) * (p / 10)
+			if digit == 0 && p >= 100 {
+				amount += (div_floor(value, p) - 1) * (p / 10)
+			} else {
+				amount += div_floor(value, p) * (p / 10)
+			}
 			remainder := value % p
-			if digit == 0 {
+			if digit == 0 && p == 10 {
 				continue
 			} else if remainder >= (digit+1)*(p/10) {
 				amount += p / 10
